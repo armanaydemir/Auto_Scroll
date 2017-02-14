@@ -3,6 +3,7 @@
  * First case is 'jumpy' method
  * By Arman Aydemir
  */
+ 'use strict';
 
 import React, { Component } from 'react';
 import {
@@ -11,22 +12,47 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View
+  View,
+  Platform,
+  Switch
 } from 'react-native';
 
 
-export default class Auto_Scroll extends Component {
-  handleScroll(event: Object) {
-    console.log(event.nativeEvent.contentOffset.y);
+class Auto_Scroll extends Component {
+  constructor(props) {
+    super(props);
+    this.handleScroll = this.handleScroll.bind(this);
+    this.onRelease = this.onRelease.bind(this);
+    this.state = {
+      init_time: new Date().getTime(),
+      offset: 0,
+      end_time: null,
+      _scrollEnabled: true
+    };
   }
-  startScroll(){
-    _scrollView.scrollToEnd();
+  handleScroll(event: Object) {
+    console.log("offset: " + event.nativeEvent.contentOffset.y);
+    this.setState({offset: event.nativeEvent.contentOffset.y});
+  }
+  onRelease(event: Object){
+    if(this.state._scrollEnabled){
+      var _end = new Date().getTime();
+      this.setState({ _scrollEnabled: false, end_time: _end});
+      var _offset = this.state.offset;
+      var current = _offset;
+      var _scrollTo = this._scrollView.scrollTo;
+      console.log(_offset);
+      setInterval(function(){
+        _scrollTo({y: (current + _offset) });
+        current += _offset;
+      }, _end - this.state.init_time);    
+    }
   }
   render() {
     return (
-    <ScrollView onScroll={this.handleScroll} ref={(scrollView) => { _scrollView = scrollView; }} scrollEventThrottle={16} decelerationRate='normal'>
+    <ScrollView ref={(scrollView) => { this._scrollView = scrollView; }} onResponderRelease={this.onRelease} onScroll={this.handleScroll} scrollEnabled={this.state._scrollEnabled} scrollEventThrottle={16}>
      <View style={styles.container}>
-        <TouchableHighlight style={styles.button} onPress={this.startScroll.bind(this)} underlayColor='#013a1c'>
+        <TouchableHighlight style={styles.button} underlayColor='#013a1c'>
           <Text style={styles.buttonText}>Scroller</Text>
         </TouchableHighlight>
         <Text style={styles.content} word_count="75">At nine o’clock on the night of July 15th, General Hulusi Akar, the chief of the Turkish Army’s general staff, heard a knock on his office door in Ankara, the nation’s capital. It was one of his subordinates, General Mehmet Di&#351;li, and he was there to report that a military coup had begun. “We will get everybody,” Di&#351;li said. “Battalions and brigades are on their way. You will soon see.”
@@ -51,7 +77,6 @@ export default class Auto_Scroll extends Component {
     
   }
 }
-
 
 
 const styles = StyleSheet.create({
