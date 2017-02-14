@@ -12,9 +12,7 @@ import {
   AppRegistry,
   StyleSheet,
   Text,
-  View,
-  Platform,
-  Switch
+  View
 } from 'react-native';
 // do i even need platform or switch???
 
@@ -49,7 +47,7 @@ class Auto_Scroll extends Component {
       var interval = _end - this.state.init_time;
       var t = 0;
 
-      var woah = setInterval(function(){
+      var v = setInterval(function(){
         if(interval - t <= 5000){
           var w = (interval-t)/1000;
           w -= w%1;
@@ -62,7 +60,7 @@ class Auto_Scroll extends Component {
               _this._scrollView.scrollTo({y: current});
             }else{
               _this._scrollView.scrollToEnd();
-              clearInterval(woah);
+              clearInterval(v);
             }
             t = 0;
           }
