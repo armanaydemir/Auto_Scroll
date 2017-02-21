@@ -32,7 +32,7 @@ class Auto_Scroll extends Component {
     };
   }
   handleScroll(event: Object) {
-    this.setState({offset: this._scrollView.props});
+    this.setState({offset: event.nativeEvent.contentOffset.y});
   }//i think i can get rid of this function at some point event.nativeEvent.contentOffset.y}
   onRelease(event: Object){
     if(this.state._scrollEnabled){
