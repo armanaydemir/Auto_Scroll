@@ -20,31 +20,26 @@ import {
 class Auto_Scroll extends Component {
   constructor(props) {
     super(props);
-    this.handleScroll = this.handleScroll.bind(this);
     this.onRelease = this.onRelease.bind(this);
     this.state = {
       init_time: new Date().getTime(),
-      offset: 0,
       end_time: null,
       _scrollEnabled: true,
       seconds: null,
       height: null
     };
   }
-  handleScroll(event: Object) {
-    this.setState({offset: event.nativeEvent.contentOffset.y});
-  }//i think i can get rid of this function at some point event.nativeEvent.contentOffset.y}
   onRelease(event: Object){
     if(this.state._scrollEnabled){
-      var _end = new Date().getTime();
-      this.setState({ _scrollEnabled: false, end_time: _end});
+      var end = new Date().getTime();
+      this.setState({ _scrollEnabled: false, end_time: end});
 
-      var _offset = this.state.offset;
       var _height = this.state.height;
+      var _offset = event.nativeEvent.contentOffset.y;
       var current = _offset;
       var _this = this;
 
-      var interval = _end - this.state.init_time;
+      var interval = end - this.state.init_time;
       var t = 0;
 
       var v = setInterval(function(){
@@ -72,13 +67,13 @@ class Auto_Scroll extends Component {
   render() {
     return (
     <View onLayout={(event) => {this.setState({height: event.nativeEvent.layout.height});}}>
-      <ScrollView ref={(scrollView) => { this._scrollView = scrollView; }} onResponderRelease={this.onRelease} onScrollEndDrag={this.handleScroll} scrollEnabled={this.state._scrollEnabled} scrollEventThrottle={16}>
+      <ScrollView ref={(sv) => {this._scrollView = sv;}} onScrollEndDrag={this.onRelease} scrollEnabled={this.state._scrollEnabled} scrollEventThrottle={16}>
         <TouchableHighlight style={styles.button} underlayColor='#013a1c'>
           <Text style={styles.buttonText}>Scroller</Text>
         </TouchableHighlight>
         <Text style={styles.content} word_count="75">At nine o’clock on the night of July 15th, General Hulusi Akar, the chief of the Turkish Army’s general staff, heard a knock on his office door in Ankara, the nation’s capital. It was one of his subordinates, General Mehmet Di&#351;li, and he was there to report that a military coup had begun. “We will get everybody,” Di&#351;li said. “Battalions and brigades are on their way. You will soon see.”
         </Text>
-        <Text style={styles.content} word_count="11">Akar was aghast. “What the hell are you saying?” he asked. {this.state.offset}
+        <Text style={styles.content} word_count="11">Akar was aghast. “What the hell are you saying?” he asked.
         </Text>
         <Text style={styles.content} word_count="89">In other cities, officers involved in the coup had ordered their units to detain senior military leaders, block major roads, and seize crucial institutions like Istanbul Atatürk Airport. Two dozen F-16 fighters took to the air. According to statements from some of the officers involved, the plotters asked Akar to join them. When he refused, they handcuffed him and flew him by helicopter to an airbase where other generals were being held; at one point, one of the rebels pointed a gun at Akar and threatened to shoot.
         </Text>
